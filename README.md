@@ -65,12 +65,13 @@ export CPLUS_INCLUDE_PATH
 <p>[Redis](http://redis.io/)下载地址;
 
 <p><p>作者:showmsg
-<p>QQ群:12277157
+<p>QQ群:12277157，因目前项目刚创建，还没什么人气哦~_~
 
 <p><p>感谢:
 <p>[xredis](https://github.com/0xsky/xredis)
 <p>[ctpService](https://coding.net/u/laozhu_zzy)
 <p>感谢其它C++开源常用库的贡献者!!!
+<p>捐赠作者:[支付宝账号] showmsg@163.com
 
 
 
