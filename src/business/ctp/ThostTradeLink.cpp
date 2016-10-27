@@ -288,7 +288,7 @@ void CThostTradeLink::OnRspOrderAction(CThostFtdcOrderActionField *pOrderAction,
 		jsonStr += "'";
 		
         string key = m_redis->RspOrderAction;
-        key += UNDERSCORE_FLAG;
+        
         key += pOrderAction->BrokerID;
         key +=  UNDERSCORE_FLAG;
         key += pOrderAction->UserID;
@@ -369,7 +369,7 @@ void CThostTradeLink::OnRtnOrder(CThostFtdcOrderField *pOrder)
 		jsonStr += "'";
 
 		std::string key = m_redis->RtnOrder;	
-		key += UNDERSCORE_FLAG;	
+			
 		key += pOrder->BrokerID;	
 		key += UNDERSCORE_FLAG;
 		key += pOrder->UserID;
@@ -438,7 +438,7 @@ void CThostTradeLink::OnRtnTrade(CThostFtdcTradeField *pTrade)
 		jsonStr += "'";
 		
         string key = m_redis->RtnTrade;
-        key += UNDERSCORE_FLAG;
+        
         key += string(pTrade->BrokerID);
         key += UNDERSCORE_FLAG;
         key += string(pTrade->UserID);      

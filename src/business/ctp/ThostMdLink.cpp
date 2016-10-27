@@ -153,8 +153,7 @@ void CThostMdLink::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMa
             //只有开启了分时数据保存才保存
             if(_isTick)
             {
-				string tick = _tick;
-				tick    += UNDERSCORE_FLAG;
+				string tick = _tick;				
 				tick    += instrument;
 				bRet = dbi.CreateDBIndex(tick.c_str(), APHash, CACHE_TYPE_1);
 				if(bRet)
