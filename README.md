@@ -39,7 +39,7 @@ export CPLUS_INCLUDE_PATH
 ```
 
 ### 系统架构
-![ctp_redis](https://git.oschina.net/showmsg/ctp_redis/attach_files/download?i=68212&u=http%3A%2F%2Ffiles.git.oschina.net%2Fgroup1%2FM00%2F00%2F8A%2FPaAvDFgRUQyAPuhHAAB8P8lt_pQ795.png%3Ftoken%3D08f181a0faa5658a16c57072ac0ced70%26ts%3D1477530081%26attname%3DplotDesign.png)
+![ctp_redis](https://github.com/showmsg/ctp_redis/tree/master/doc/plotDesign.png)
 
 ### 功能点
 
