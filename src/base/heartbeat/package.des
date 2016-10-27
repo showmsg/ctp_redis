@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="gb2312"?>
+<packageDefine name="heartbeat" version="1" type="cpp" includedir="." platform="all">
+	<parameter/>
+	<depend/>
+	<cppfile>
+		<file name="Heartbeat.cpp"/>		
+	</cppfile>
+	<headfile>
+		<file name="Heartbeat.h"/>	
+	<command/>
+</packageDefine>

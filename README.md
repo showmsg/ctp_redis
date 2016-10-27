@@ -1,2 +1,75 @@
-# ctp_redis
-ä½¿ç”¨Redisåšå†…å­˜æ•°æ®åº“ï¼ŒåšæœŸè´§ç­–ç•¥äº¤æ˜“; è¡Œæƒ…è‡ªåŠ¨è®¢é˜…ï¼› æŠ¥å•ä»Redisé˜Ÿåˆ—è·å–å‘ä¸ŠæŠ¥å•ï¼›
+ctp_Redis
+=====
+
+### ÒÀÀµ
+
+ctp_redisÒÀÀµhiredis¡¢xredisÔÚÊ¹ÓÃxredisÇ°ĞèÒª°²×°hiredis¿â£»
+[xredis](https://git.oschina.net/showmsg/xrdis_rosolve) Ê¹ÓÃÁË×Ô¼ºĞŞ¸Ä¹ıµÄ°æ±¾£¬RedisNode¿ÉÅäÖÃ;
+Ä¬ÈÏ°²×°¼´¿É;
+```bash
+make&sudo make install
+```
+
+### ±àÒë
+
+* °ÑamakeºÍpump¹¤¾ß·Åµ½»·¾³±äÁ¿£»
+* ±àÒëÇ°ĞèÒªÏÈÉèÖÃ»·¾³±äÁ¿;
+
+```bash
+cat ~/.bash_profile
+LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib:.
+export LD_LIBRARY_PATH
+C_INCLUDE_PATH=/usr/include:/usr/local/include:/usr/local/include:/usr/local/include/zookeeper
+export C_INCLUDE_PATH
+
+CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:/usr/include:/usr/local/include:/usr/local/include/hiredis:/usr/local/include/zookeeper:/usr/local/include/xredis
+export CPLUS_INCLUDE_PATH
+```
+### Æô¶¯
+
+```bash
+# start market
+./market
+# start trade
+./trade
+# start plot
+./plot GroupA 1
+./plot GroupB 2
+./plot GroupB 3
+```
+
+### ÏµÍ³¼Ü¹¹
+![ctp_redis](https://git.oschina.net/showmsg/ctp_redis/attach_files/download?i=68212&u=http%3A%2F%2Ffiles.git.oschina.net%2Fgroup1%2FM00%2F00%2F8A%2FPaAvDFgRUQyAPuhHAAB8P8lt_pQ795.png%3Ftoken%3D08f181a0faa5658a16c57072ac0ced70%26ts%3D1477530081%26attname%3DplotDesign.png)
+
+### ¹¦ÄÜµã
+
+* ¶à»·¾³Ö§³Ö;
+* trade ±¨µ¥½Ó¿Ú, market ĞĞÇé×ª»», plot ²ßÂÔ½ø³Ì;
+* plot [×é±ğ] [Î¨Ò»±ê¼Ç],×é±ğÓÃÓÚÒ»¸ö²ßÂÔ×éµÄÖ÷±¸£¬Ò»¸ö×éÖ»ÓĞÒ»¸öÖ÷£¬ÆäËüÍ¬²½½øĞĞ£¬Ö»½ÓÊÜ£¬²»·¢ËÍ£¬
+  ÔÚÖ÷½ø³Ìå´µôºó£¬ÆäËü½ø³Ì¾ºÕùÎªÖ÷ºó½øĞĞ·¢ËÍ£»
+* Î¨Ò»±êÊ¶ÓÃÓÚ±êÊ¶½ø³ÌËùÔÚÖ÷»úÎ»ÖÃ£»
+* Ê¹ÓÃlrangeÊ¹ĞÔÄÜ´ïµ½±¨µ¥240000±Ê/Ãë£»
+* Ö§³ÖÅäÖÃ¶àÕËºÅ½»Ò×;
+### TODO
+
+* jsonºÍstructĞòÁĞ»¯»¥×ªÊµÏÖ;
+* ²ßÂÔÇ°ÖÃ¡¢Â·ÓÉ¡¢Ö÷±¸ÓëÔÖ±¸¿¼ÂÇ£»
+* ²ßÂÔÇ°¶ËÕ¹ÏÖ;
+
+### Ïà¹Ø¹¦ÄÜ
+
+<p>[Simnow](http://www.simnow.com.cn/)×¢²áÍøÕ¾;
+<p>[Redis](http://redis.io/)ÏÂÔØµØÖ·;
+
+<p><p>×÷Õß:showmsg
+<p>QQÈº:12277157
+
+<p><p>¸ĞĞ»:
+<p>[xredis](https://github.com/0xsky/xredis)
+<p>[ctpService](https://coding.net/u/laozhu_zzy)
+<p>¸ĞĞ»ÆäËüC++¿ªÔ´³£ÓÃ¿âµÄ¹±Ï×Õß!!!
+
+
+
+
+			

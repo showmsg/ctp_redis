@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="gb2312"?>
+<packageDefine name="utils" version="1" type="cpp" includedir="." platform="all">
+	<parameter/>
+	<depend>
+		<package name="ini" version="1"/>
+	</depend>
+	<cppfile>
+		<file name="Lib.cpp"/>
+		<file name="Logger.cpp"/>		
+	</cppfile>
+	<headfile>
+		<file name="Lib.h"/>
+		<file name="Logger.h"/>		
+		<file name="global.h"/>
+	</headfile>	
+	<command/>
+</packageDefine>

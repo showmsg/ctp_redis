@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="gb2312"?>
+<packageDefine name="task" version="1" type="cpp" includedir="." platform="all">
+	<parameter/>
+	<depend/>
+	<cppfile>
+		<file name="task.cpp"/>
+		<file name="thread.cpp"/>
+		<file name="utils.cpp"/>
+	</cppfile>
+	<headfile>
+		<file name="task.h"/>
+		<file name="thread.h"/>
+		<file name="utils.h"/>	
+		<file name="mutex.h"/>
+	<command/>
+</packageDefine>

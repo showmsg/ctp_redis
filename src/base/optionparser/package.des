@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="gb2312"?>
+<packageDefine name="optionparser" version="1" type="cpp" includedir="." platform="all">
+	<parameter/>
+	<depend/>
+	<cppfile/>	
+	<headfile>
+		<file name="optionparser.h"/>	
+	<command/>
+</packageDefine>

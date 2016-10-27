@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="gb2312"?>
+<packageDefine name="thread" version="1" type="cpp" includedir="." platform="all">
+	<parameter/>
+	<depend/>
+	<cppfile>		
+		<file name="Thread.cpp"/>		
+	</cppfile>
+	<headfile>		
+		<file name="Thread.h"/>		
+	<command/>
+</packageDefine>

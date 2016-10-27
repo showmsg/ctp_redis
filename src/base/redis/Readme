@@ -1,0 +1,14 @@
+1. 首先，在redis-2.6.15/src目录下，找到ae.c、ae.h、ae_epoll.c、config.h、zmalloc.c、zmalloc.h，将它们拷贝到hiredis目录下
+2. 用gcc -c ae.c 生成 ae.o， 用gcc -c zmalloc.c生成zmalloc.o，用ar -r libae.a ae.o zmallo.o生成静态库
+3. 拷贝到/usr/local/libae
+4. 设置编译环境
+   LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib:.
+   export LD_LIBRARY_PATH
+   C_INCLUDE_PATH=/usr/include:/usr/local/include:/usr/local/include
+   export C_INCLUDE_PATH
+
+   CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:/usr/include:/usr/local/include:/usr/local/include/hiredis
+   export CPLUS_INCLUDE_PATH
+
+5. 编译
+g++ -o testsub testpubsub.cpp RedisPubClient.cpp RedisSubClient.cpp -I ./  -pthread -lhiredis -lae

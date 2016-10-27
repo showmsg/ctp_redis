@@ -1,0 +1,15 @@
+#ºöÂÔ*.oÎÄ¼ş
+*.o
+*.obj
+*.swap
+thirdpart/
+src/base/time/
+output
+tools
+src/business/qdam
+src/business/qdp
+src/business/qdpmarket
+zookeeper
+tmp/
+doc/*.doc
+doc/*.vsdx

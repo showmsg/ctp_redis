@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="gb2312"?>
+
+<packageDefine name="plot" version="1" type="cpp" includedir="." platform="all">
+	<parameter/>
+	<depend>
+		<package name="utils" version="1"/>
+		<package name="json" version="1"/>		
+		<package name="redis" version="1"/>
+		
+	</depend>
+	<cppfile>
+		<file name="plot.cpp"/>
+		<file name="plotbase.cpp"/>
+	</cppfile>
+	<headfile>
+		<file name="plotbase.h"/>
+	</headfile>
+	<command/>
+</packageDefine>

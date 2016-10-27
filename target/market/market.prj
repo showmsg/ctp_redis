@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="gb2312"?>
+<project target="market" targettype="exe" hasdebug="yes" hasmap="no" hasprofile="no" multithread="yes" warninglevel="2" workdir="." libs="" cppflags="-g -ggdb3 -fpermissive" ldflags="" arflags="">
+	<package name="utils" dir="../../src/base/utils"/>
+	<package name="ini" dir="../../src/base/ini"/>
+	<package name="json" dir="../../src/base/json"/>
+	<package name="redis" dir="../../src/base/redis"/>
+	<package name="thread" dir="../../src/base/thread"/>
+	<package name="baseexchapi" dir="../../src/business/engine"/>
+	<package name="Thostlink" dir="../../src/business/ctp"/>
+	<package name="linkmanager" dir="../../src/business/linkmanager"/>
+	<package name="market" dir="../../src/business/market"/>
+</project>

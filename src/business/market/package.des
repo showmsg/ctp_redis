@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="gb2312"?>
+
+<packageDefine name="market" version="1" type="cpp" includedir="." platform="all">
+	<parameter/>
+	<depend>
+		<package name="utils" version="1"/>
+		<package name="json" version="1"/>
+		<package name="Thostlink" version="1"/>
+		<package name="redis" version="1"/>
+		<package name="baseexchapi" version="1"/>
+		<package name="linkmanager" version="1"/>
+	</depend>
+	<cppfile>
+		<file name="market.cpp"/>				
+	</cppfile>
+	<headfile>			
+	</headfile>
+	<command/>
+</packageDefine>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="gb2312"?>
+
+<packageDefine name="trade" version="1" type="cpp" includedir="." platform="all">
+	<parameter/>
+	<depend>
+		<package name="ini" version="1"/>
+		<package name="utils" version="1"/>
+		<package name="json" version="1"/>
+		<package name="baseexchapi" version="1"/>
+		<package name="Thostlink" version="1"/>
+		<package name="redis" version="1"/>
+	</depend>
+	<cppfile>
+		<file name="trade.cpp"/>			
+	</cppfile>
+	<headfile>		
+	</headfile>
+	<libfile>
+		<file name="zookeeper_mt"/>		
+	</libfile>
+	<command/>
+</packageDefine>

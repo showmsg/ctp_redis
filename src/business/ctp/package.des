@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="gb2312"?>
+
+<packageDefine name="Thostlink" version="1" type="cpp" includedir="." platform="all">
+	<parameter/>
+	<depend>
+		<package name="redis" version="1"/>
+		<package name="baseexchapi" version="1"/>
+	</depend>
+	<cppfile>
+		<file name="ThostMdLink.cpp"/>
+		<file name="ThostTradeLink.cpp"/>
+	</cppfile>
+	<headfile>
+		<file name="ThostFtdcMdApi.h"/>
+		<file name="ThostFtdcTraderApi.h"/>
+		<file name="ThostFtdcUserApiDataType.h"/>
+		<file name="ThostFtdcUserApiStruct.h"/>
+		<file name="ThostMdLink.h"/>
+		<file name="ThostTradeLink.h"/>
+	</headfile>
+	<libfile>
+		<file name="thostmduserapi"/>
+		<file name="thosttraderapi"/>
+	</libfile>
+	<command/>
+</packageDefine>

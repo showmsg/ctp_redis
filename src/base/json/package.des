@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="gb2312"?>
+
+<packageDefine name="json" version="1" type="cpp" includedir="." platform="all">
+	<parameter/>
+	<depend>
+	</depend>
+	<cppfile>
+		<file name="json_reader.cpp"/>
+		<file name="json_value.cpp"/>
+		<file name="json_writer.cpp"/>		
+	</cppfile>
+	<headfile>
+		<file name="json_batchallocator.h"/>
+		<file name="json/autolink.h"/>
+		<file name="json/config.h"/>
+		<file name="json/features.h"/>
+		<file name="json/forwards.h"/>
+		<file name="json/json.h"/>
+		<file name="json/reader.h"/>
+		<file name="json/value.h"/>
+		<file name="json/writer.h"/>		
+	</headfile>
+	<command/>
+</packageDefine>

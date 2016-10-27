@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="gb2312"?>
+<packageDefine name="linkmanager" version="1" type="cpp" includedir="." platform="all">
+	<parameter/>
+	<depend>
+				
+	</depend>
+	<cppfile>		
+		<file name="GateLinkManager.cpp"/>	
+	</cppfile>
+	<headfile>	
+		<file name="GateLinkManager.h"/>
+	</headfile>
+	
+	<command/>
+</packageDefine>

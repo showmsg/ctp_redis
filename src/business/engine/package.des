@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="gb2312"?>
+
+<packageDefine name="baseexchapi" version="1" type="cpp" includedir="." platform="all">
+	<parameter/>
+	<depend>
+		<package name="redis" version="1"/>
+	</depend>
+	<cppfile>
+		
+	</cppfile>
+	<headfile>
+		<file name="QspFtdcUserApiStruct.h"/>
+		<file name="QspFtdcUserApiDataType.h"/>
+		<file name="BaseExchApi.h"/>		
+	</headfile>	
+	<command/>
+</packageDefine>
