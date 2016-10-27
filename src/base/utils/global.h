@@ -17,4 +17,5 @@
 
 #define UNDERSCORE_FLAG       "_"
 #define SPLIT_FLAG            "/"
+#define COLON_FLAG            ":"
 #endif

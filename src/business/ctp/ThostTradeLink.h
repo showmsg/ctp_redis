@@ -1,4 +1,4 @@
-#ifndef __CTHostTRADE_LINK_H
+﻿#ifndef __CTHostTRADE_LINK_H
 #define __CTHostTRADE_LINK_H
 
 #include "ThostFtdcTraderApi.h"
@@ -7,6 +7,7 @@
 #include "Logger.h"
 #include "Redis.h"
 
+typedef map<string,int> UserRspSerializeMap;
 class CThostTradeLink : public CThostFtdcTraderSpi, public CBaseExchApi
 {
     public:
@@ -97,7 +98,10 @@ private:
 	TdRedis* m_redis;
 	string m_instruments;
 	int m_maxInstrumentsCnt;
-	
+	UserRspSerializeMap m_rspinserMap;
+	UserRspSerializeMap m_rspactionMap;
+	UserRspSerializeMap m_rtnorderMap;
+	UserRspSerializeMap m_rtntradeMap;
 };
 
 #endif

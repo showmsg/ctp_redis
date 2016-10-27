@@ -83,30 +83,30 @@ void CApp::Init(string group, string appkey)
     string _brokerid = m_iniHndl.getStringValue(TRADE_SECTION, "trade_broker_id", iRet);
     string _userid = m_iniHndl.getStringValue(TRADE_SECTION, "trade_user_id", iRet);
 
-    m_rsporder = _rspinsert + _env;
-    m_rsporder += "_";
+    m_rsporder = _env + _rspinsert;
+    m_rsporder += UNDERSCORE_FLAG;
     m_rsporder += _brokerid;
-    m_rsporder += "_";
+    m_rsporder += UNDERSCORE_FLAG;
     m_rsporder += "m001";
 
-    m_rtnorder = _rtnorder  + _env;
-    m_rtnorder += "_";
+    m_rtnorder = _env + _rtnorder;
+    m_rtnorder += UNDERSCORE_FLAG;
     m_rtnorder += _brokerid;
-    m_rtnorder += "_";
+    m_rtnorder += UNDERSCORE_FLAG;
     m_rtnorder += "m001";
     LOG_INFO("%s", m_rtnorder.c_str());
 
-    m_rtntrade = _rtntrade  + _env;
-    m_rtntrade += "_";
+    m_rtntrade = _env + _rtntrade;
+    m_rtntrade += UNDERSCORE_FLAG;
     m_rtntrade += _brokerid;
-    m_rtntrade += "_";
+    m_rtntrade += UNDERSCORE_FLAG;
     m_rtntrade += "m001";
 
-    m_routerMsg = _routermsg + _env;
-    m_routerMsg += "_";
+    m_routerMsg = _env + _routermsg;
+    m_routerMsg += UNDERSCORE_FLAG;
     m_routerMsg += m_group;
 
-    m_clientReq = _clientreq + _env;
+    m_clientReq = _env + _clientreq;
 
     LOG_INFO("#Channel# channel:%s, userstatus:%s, client_queue:%s", _channel.c_str(), _userstatus.c_str(), _clientreq.c_str());
     LOG_INFO("rspaction:%s, rspinsert:%s, clientposition:%s, instrument:%s", _rspaction.c_str(), _rspinsert.c_str(), 
@@ -129,18 +129,18 @@ void CApp::Init(string group, string appkey)
     //	m_plotRedis.RedisPub           = &_publisher;
     m_plotRedis.xredis             = &_xredis; 
     m_plotRedis.Env		           = _env;	
-    m_plotRedis.Channel            = _channel;	
-    m_plotRedis.Snapshot           = _snapshort;
-    m_plotRedis.UserStatus         = _userstatus;
-    m_plotRedis.RspOrderInsert     = _rspinsert;
-    m_plotRedis.RspOrderAction     = _rspaction;
-    m_plotRedis.RtnOrder           = _rtnorder;
-    m_plotRedis.RtnTrade           = _rtntrade;
-    m_plotRedis.ClientPosition     = _clientposition;
-    m_plotRedis.Instruments        = _instruments;
-    m_plotRedis.ClientReq          = _clientreq;
-    m_plotRedis.Account            = _account;
-    m_plotRedis.RouterMsg          = _routermsg;   
+    m_plotRedis.Channel            = _env + _channel;	
+    m_plotRedis.Snapshot           = _env + _snapshort;
+    m_plotRedis.UserStatus         = _env + _userstatus;
+    m_plotRedis.RspOrderInsert     = _env + _rspinsert;
+    m_plotRedis.RspOrderAction     = _env + _rspaction;
+    m_plotRedis.RtnOrder           = _env + _rtnorder;
+    m_plotRedis.RtnTrade           = _env + _rtntrade;
+    m_plotRedis.ClientPosition     = _env + _clientposition;
+    m_plotRedis.Instruments        = _env + _instruments;
+    m_plotRedis.ClientReq          = _env + _clientreq;
+    m_plotRedis.Account            = _env + _account;
+    m_plotRedis.RouterMsg          = _env + _routermsg;   
 
     LOG_INFO("===============================================================\n");
 

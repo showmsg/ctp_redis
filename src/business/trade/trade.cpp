@@ -19,7 +19,8 @@ class CApp : public Thread
         void Run();
     private:
         CBaseExchApi* m_pExchApi;
-        xRedisClient _xredis;	
+        xRedisClient _xredis;
+		xRedisClient m_mainxredis;
         IniFile g_ini;
         string clientReq;
         int m_iReqNo;
@@ -117,7 +118,21 @@ void CApp::Init()
 		#endif
 		goto LOOP_CONNECT_REDIS;
 	}   
+	/*
+	m_mainxredis.Init(iredis_cnt);	
 	
+	LOOP_CONNECT_MAIN:
+    if(!m_mainxredis.ConnectRedisCache(RedisList, iredis_cnt, CACHE_TYPE_2))
+	{
+		LOG_ERROR("connect redis error");
+		#ifdef WIN32
+		 Sleep(1000);
+		#else
+				 usleep(100);
+		#endif
+		goto LOOP_CONNECT_MAIN;
+	}
+	*/
 	//=====================================================================
 	string _tick           = g_ini.getStringValue(TRADE_SECTION, "channel_tick", iRet);
     string _channel        = g_ini.getStringValue(TRADE_SECTION, "channel_market", iRet);
@@ -132,10 +147,10 @@ void CApp::Init()
     string _clientreq      = g_ini.getStringValue(TRADE_SECTION, "client_msg_queue", iRet);
     string _mrktlist       = g_ini.getStringValue(TRADE_SECTION, "channel_marketlist", iRet);
 	
-	LOG_INFO("#Channel# tick:%s, userstatus:%s, client_queue:%s", _tick.c_str(), _userstatus.c_str(), _clientreq.c_str());
-    LOG_INFO("rspaction:%s, rspinsert:%s, clientposition:%s, instrument:%s", _rspaction.c_str(), _rspinsert.c_str(), 
+	LOG_INFO("#Channel# tick:[[%s], userstatus:[%s], client_queue:[%s]", _tick.c_str(), _userstatus.c_str(), _clientreq.c_str());
+    LOG_INFO("rspaction:[%s], rspinsert:[%s], clientposition:[%s], instrument:[%s]", _rspaction.c_str(), _rspinsert.c_str(), 
             _clientposition.c_str(), _instruments.c_str());
-    LOG_INFO("rtnorder:%s, rtntrade:%s", _rtnorder.c_str(), _rtntrade.c_str());
+    LOG_INFO("rtnorder:[%s], rtntrade:[%s]", _rtnorder.c_str(), _rtntrade.c_str());
 	//======================================================================
 	string _flowpath      = g_ini.getStringValue(TRADE_SECTION, "flow_path", iRet);	
 	LOG_INFO("TradeNums:%d", _tradenums);
@@ -157,27 +172,27 @@ void CApp::Init()
 		mdlink.Password = _password;
 		mdlink.Address  = _tdaddress;
 		mdlink.FlowPath = _flowpath;
-		mdlink.MrktList = _mrktlist + _env;
+		mdlink.MrktList = _env + _mrktlist;
 		mdlink.MrktGroup= _group;
 		mdlink.isTrade  = 1;
 		m_linkVect.push_back(mdlink);
 	}
 	
-    clientReq = _clientreq + _env;
+    clientReq = _env + _clientreq;
 
     tdredis.xredis           = &_xredis;
     tdredis.Env		           = _env;
-    tdredis.Channel            = _channel;	
-    tdredis.Tick               = _tick + _env;
-    tdredis.UserStatus         = _userstatus + _env;
-    tdredis.RspOrderInsert     = _rspinsert + _env;
-    tdredis.RspOrderAction     = _rspaction + _env;
-    tdredis.RtnOrder           = _rtnorder + _env;
-    tdredis.RtnTrade           = _rtntrade + _env;
-    tdredis.ClientPosition     = _clientposition + _env;
-    tdredis.Instruments        = _instruments + _env;
-    tdredis.ClientReq          = _clientreq + _env;
-    tdredis.MrktList           = _mrktlist + _env;
+    tdredis.Channel            = _env + _channel;	
+    tdredis.Tick               = _env + _tick;
+    tdredis.UserStatus         = _env + _userstatus;
+    tdredis.RspOrderInsert     = _env + _rspinsert;
+    tdredis.RspOrderAction     = _env + _rspaction;
+    tdredis.RtnOrder           = _env + _rtnorder;
+    tdredis.RtnTrade           = _env + _rtntrade;
+    tdredis.ClientPosition     = _env + _clientposition;
+    tdredis.Instruments        = _env + _instruments;
+    tdredis.ClientReq          = _env + _clientreq;
+    tdredis.MrktList           = _env + _mrktlist;
 		
 	m_LinkManager = new CGateLinkManager();
 	m_LinkManager->Init(m_linkVect);    
@@ -202,10 +217,11 @@ void CApp::Run()
             ArrayReply Reply;
             int64_t count = 0;
             if (!_xredis.llen(dbi, szHKey, count)) {
-                LOG_ERROR("%s error %s", __PRETTY_FUNCTION__, dbi.GetErrInfo());
+                LOG_ERROR("[%s] %s error %s", clientReq.c_str(), __PRETTY_FUNCTION__, dbi.GetErrInfo());
             }
             if(count == 0)
             {
+				usleep(1000);
                 continue;
             }
             if (_xredis.lrange(dbi, szHKey, 0, count, Reply)) 

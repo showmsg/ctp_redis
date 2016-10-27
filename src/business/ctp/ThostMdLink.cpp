@@ -135,7 +135,7 @@ void CThostMdLink::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMa
 			int64_t count = 0;
 			if(!_xredis->publish(dbi, key.c_str(), jsonStr, count))
 			{
-				LOG_ERROR("%s error %s", __PRETTY_FUNCTION__, dbi.GetErrInfo());
+				LOG_ERROR("[%s] %s error %s", key.c_str(), __PRETTY_FUNCTION__, dbi.GetErrInfo());
 			}
 		}
 		
@@ -146,7 +146,7 @@ void CThostMdLink::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMa
 		{
 			int64_t count = 0;
 			if (!_xredis->hset(dbi, snapshot.c_str(), instrument, jsonStr, count)) {
-				LOG_ERROR("%s error %s", __PRETTY_FUNCTION__, dbi.GetErrInfo());
+				LOG_ERROR("[%s] %s error %s", snapshot.c_str(), __PRETTY_FUNCTION__, dbi.GetErrInfo());
 			}
 		}
 
@@ -163,7 +163,7 @@ void CThostMdLink::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMa
 					VALUES vVal;
 					vVal.push_back(jsonStr);
 					if (!_xredis->rpush(dbi, tick.c_str(), vVal, count)) {
-						LOG_ERROR("%s error %s", __PRETTY_FUNCTION__, dbi.GetErrInfo());
+						LOG_ERROR("[%s] %s error %s", tick.c_str(), __PRETTY_FUNCTION__, dbi.GetErrInfo());
 					}
 					
 				}

@@ -1,4 +1,4 @@
-#include "ThostTradeLink.h"
+﻿#include "ThostTradeLink.h"
 #include "Lib.h"
 
 
@@ -85,7 +85,7 @@ void CThostTradeLink::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
             Lib::trimright(jsonStr, '\r');
 			
 			string userinfo = m_redis->UserStatus;
-			LOG_INFO("%s", userinfo.c_str());
+			LOG_INFO("%s \n %s", userinfo.c_str(), jsonStr.c_str());
 			string brokeruser = pRspUserLogin->BrokerID;
 			brokeruser += UNDERSCORE_FLAG;
 			brokeruser += pRspUserLogin->UserID;
@@ -95,8 +95,11 @@ void CThostTradeLink::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
 			if(bRet)
 			{
 				int64_t count = 0;
+				LOOP_USERLOGIN:
 				if (!_xredis->hset(dbi, userinfo.c_str(), brokeruser, jsonStr, count)) {
-					LOG_ERROR("%s error %s", __PRETTY_FUNCTION__, dbi.GetErrInfo());
+					LOG_ERROR("[%s][%s] %s error %s", userinfo.c_str(), brokeruser.c_str(), __PRETTY_FUNCTION__, dbi.GetErrInfo());
+					usleep(10);
+					goto LOOP_USERLOGIN;
 				}
 			}		
             LOG_INFO("#rsplogin# %s", jsonStr.c_str());
@@ -169,8 +172,10 @@ void CThostTradeLink::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, C
 	LOG_INFO("OnRspOrderInsert %s\n", pRspInfo->ErrorMsg);
     if(NULL != pInputOrder && NULL != _xredis)
     {
+		m_rspinserMap[pInputOrder->UserID] += 1; 
         Json::FastWriter writer;
         Json::Value rspOrderInsert;
+		rspOrderInsert["Idx"]                = m_rspinserMap[pInputOrder->UserID];
         rspOrderInsert["BrokerID"] = pInputOrder->BrokerID;
         rspOrderInsert["InvestorID"] = pInputOrder->InvestorID;
         rspOrderInsert["InstrumentID"] = pInputOrder->InstrumentID;
@@ -241,8 +246,10 @@ void CThostTradeLink::OnRspOrderAction(CThostFtdcOrderActionField *pOrderAction,
     printf("OnRspOrderAction\n");
     if(NULL != pOrderAction && NULL != _xredis)
     {
+		m_rspactionMap[pOrderAction->UserID] += 1;
         Json::FastWriter writer;
         Json::Value rspOrderAction;
+		rspOrderAction["Idx"]            = m_rspactionMap[pOrderAction->UserID];
         rspOrderAction["BrokerID"] = pOrderAction->BrokerID;
         rspOrderAction["InvestorID"] = pOrderAction->InvestorID;
         rspOrderAction["OrderActionRef"] = pOrderAction->OrderActionRef;
@@ -313,8 +320,10 @@ void CThostTradeLink::OnRtnOrder(CThostFtdcOrderField *pOrder)
     printf("OnRtnOrder\n");
     if(NULL != pOrder && NULL != _xredis)
     {
+		m_rtnorderMap[pOrder->UserID] += 1;
         Json::FastWriter writer;
         Json::Value rspOrderInsert;
+		rspOrderInsert["Idx"]                = m_rtnorderMap[pOrder->UserID];
         rspOrderInsert["BrokerID"] = pOrder->BrokerID;
         rspOrderInsert["InvestorID"] = pOrder->InvestorID;
         rspOrderInsert["InstrumentID"] = pOrder->InstrumentID;
@@ -387,8 +396,10 @@ void CThostTradeLink::OnRtnTrade(CThostFtdcTradeField *pTrade)
     printf("OnRtnTrade\n");
     if(NULL != pTrade && NULL != _xredis)
     {
+		m_rtntradeMap[pTrade->UserID] += 1;
         Json::FastWriter writer;
         Json::Value rtnTrade;
+		rtnTrade["Idx"]                   = m_rtntradeMap[pTrade->UserID];
         rtnTrade["BrokerID"] = pTrade->BrokerID;
         rtnTrade["InvestorID"] = pTrade->InvestorID;
         rtnTrade["InstrumentID"] = pTrade->InstrumentID;
@@ -786,8 +797,11 @@ void CThostTradeLink::OnRspQryInvestor(CThostFtdcInvestorField *pInvestor, CThos
 		if(bRet)
 		{
 			int64_t count = 0;
+			LOOP_QRYINVESTOR:
 			if (!_xredis->hset(dbi, key.c_str(), field, jsonStr, count)) {
-				LOG_ERROR("%s error %s", __PRETTY_FUNCTION__, dbi.GetErrInfo());
+				LOG_ERROR("[%s][%s] %s error %s", key.c_str(), field.c_str(), __PRETTY_FUNCTION__, dbi.GetErrInfo());
+				usleep(10);
+				goto LOOP_QRYINVESTOR;
 			}
 		}
     }
@@ -885,7 +899,7 @@ void CThostTradeLink::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument,
 			LOOP_INSTRUMENTS_HSET:
 			if(!_xredis->hset(dbi, linstrument.c_str(), inst, jsonStr, count))
 			{
-				LOG_ERROR("hset %s error %s", __PRETTY_FUNCTION__, dbi.GetErrInfo());
+				LOG_ERROR("hset [%s][%s] %s error %s", linstrument.c_str(), inst.c_str(), __PRETTY_FUNCTION__, dbi.GetErrInfo());
 				usleep(10);
 				goto LOOP_INSTRUMENTS_HSET;
 			}
@@ -904,9 +918,12 @@ void CThostTradeLink::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument,
 				int64_t count = 0;
 				VALUES vVal;
 				vVal.push_back(m_instruments);
+				LOOP_INSTRUMENT_RPUSH:
 				if(!_xredis->rpush(dbi, lmrklist.c_str(), vVal, count))
 				{
-					LOG_ERROR("rpush %s error %s", __PRETTY_FUNCTION__, dbi.GetErrInfo());
+					LOG_ERROR("[%s] rpush %s error %s", lmrklist.c_str(), __PRETTY_FUNCTION__, dbi.GetErrInfo());
+					usleep(10);
+					goto LOOP_INSTRUMENT_RPUSH;
 				}
 				m_instruments.clear();
                 m_maxInstrumentsCnt = 0;
@@ -991,9 +1008,12 @@ void CThostTradeLink::OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *
 		bool bRet = dbi.CreateDBIndex(positionkey.c_str(), APHash, CACHE_TYPE_1);
 		if(bRet)
 		{
+			LOOP_QRYPOSITION:
 			int64_t count = 0;
 			if (!_xredis->hset(dbi, positionkey.c_str(), positionfield, jsonStr, count)) {
-				LOG_ERROR("%s error %s", __PRETTY_FUNCTION__, dbi.GetErrInfo());
+				LOG_ERROR("[%s][%s] %s error %s", positionkey.c_str(), positionfield.c_str(), __PRETTY_FUNCTION__, dbi.GetErrInfo());
+				usleep(10);
+				goto LOOP_QRYPOSITION;
 			}
 		}
     }

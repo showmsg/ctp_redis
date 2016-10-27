@@ -22,7 +22,8 @@ class CApp : public Thread
         void Init();
         void Run();
     private:
-        xRedisClient _xredis;       
+        xRedisClient _xredis;
+		xRedisClient m_mainxredis;	
         string m_mrklist;
         CBaseExchApi* m_pExchApi;
         int   ismrklstfrmtrade;
@@ -87,9 +88,9 @@ void CApp::Init()
     Lib::replace(m_MrkListStore, ENVNO_REPLACE_FLAG, _env);
 	
 	//从文件中取出订阅行情列表,移除，从本地获得列表
-    m_mrklist = _mrktlist + _env;
+    m_mrklist = _env + _mrktlist;
 	
-    LOG_INFO("#Channel# tick:%s, snapshort:%s, market_list:%s", _tick.c_str(), _snapshot.c_str(), 
+    LOG_INFO("#Channel# tick:[%s], snapshort:[%s], market_list:[%s]", _tick.c_str(), _snapshot.c_str(), 
             _mrktlist.c_str());
 	
 	int iredis_cnt       = g_ini.getIntValue(REDIS_SECTION, "rds_count", iRet);
@@ -135,14 +136,28 @@ void CApp::Init()
 		goto LOOP_CONNECT_REDIS;
 	}
 	
+	/*
+	LOOP_CONNECT_MAIN:
+	m_mainxredis.Init(iredis_cnt);	
+	if(!m_mainxredis.ConnectRedisCache(RedisList, iredis_cnt, CACHE_TYPE_2))
+	{
+		LOG_ERROR("connect redis error");
+		#ifdef WIN32
+		 Sleep(1000);
+		#else
+				 usleep(100);
+		#endif
+		goto LOOP_CONNECT_MAIN;
+	}
+	*/
     //注册订阅行情回调		
     MdRedis mdredis;
     mdredis.xredis         = &_xredis;    
     mdredis.Env            = _env;
-    mdredis.Channel        = _channel + _env;
-    mdredis.Snapshot       = _snapshot + _env;
-    mdredis.Tick           = _tick + _env;
-    mdredis.MrktList       = _mrktlist + _env;
+    mdredis.Channel        = _env + _channel;
+    mdredis.Snapshot       = _env + _snapshot;
+    mdredis.Tick           = _env + _tick;
+    mdredis.MrktList       = _env + _mrktlist;
     mdredis.isTick         = _isTick;
     mdredis.MrktListStore  = m_MrkListStore;
 	
@@ -167,7 +182,7 @@ void CApp::Init()
 		mdlink.Password = _password;
 		mdlink.Address  = _mrkaddress;
 		mdlink.FlowPath = _flowpath;
-		mdlink.MrktList = _mrktlist + _env;
+		mdlink.MrktList = _env + _mrktlist;
 		mdlink.MrktGroup= _group;
 		mdlink.isTrade  = 0;
 		m_linkVect.push_back(mdlink);
@@ -201,10 +216,11 @@ void CApp::Run()
 			ArrayReply Reply;
             int64_t count = 0;
             if (!_xredis.llen(dbi, m_mrklist, count)) {
-                LOG_ERROR("%s error %s", __PRETTY_FUNCTION__, dbi.GetErrInfo());
+                LOG_ERROR("[%s] %s error %s",m_mrklist.c_str(), __PRETTY_FUNCTION__, dbi.GetErrInfo());
             }
             if(count == 0)
             {
+				usleep(10000);
                 continue;
             }
 			
