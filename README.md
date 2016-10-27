@@ -1,6 +1,9 @@
 ctp_Redis
 =====
 
+**注意:**
+以后本系统将第一时间在[github](https://github.com/showmsg/ctp_redis)上更新，请大家关注此处。
+
 ### 依赖
 
 ctp_redis依赖hiredis、xredis在使用xredis前需要安装hiredis库；
