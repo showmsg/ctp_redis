@@ -467,7 +467,11 @@ void CThostTradeLink::OnRtnInstrumentStatus(CThostFtdcInstrumentStatusField *pIn
 
 void CThostTradeLink::StartWork()
 {
-    m_pUserApi = CThostFtdcTraderApi::CreateFtdcTraderApi("../flow/");
+	char stemp[1024];
+	memset(stemp, 0, sizeof(stemp));
+	sprintf(stemp, "%s%s", _flowpath.c_str(), _userID.c_str());
+	
+    m_pUserApi = CThostFtdcTraderApi::CreateFtdcTraderApi(stemp);
     m_pUserApi->RegisterSpi(this);
 
     m_pUserApi->SubscribePrivateTopic(THOST_TERT_RESUME);

@@ -179,7 +179,8 @@ void CApp::Init()
 	}
 	
     clientReq = _env + _clientreq;
-
+	
+	LOG_INFO("#ORDER# OrderQueue:%s", clientReq.c_str());
     tdredis.xredis           = &_xredis;
     tdredis.Env		           = _env;
     tdredis.Channel            = _env + _channel;	
@@ -221,7 +222,7 @@ void CApp::Run()
             }
             if(count == 0)
             {
-				usleep(1000);
+//				usleep(1000);
                 continue;
             }
             if (_xredis.lrange(dbi, szHKey, 0, count, Reply)) 
@@ -238,7 +239,7 @@ void CApp::Run()
                     //客户号
                     strcpy(req.InvestorID,"047811");
                     //交易用户
-                    strcpy(req.UserID,"m001");
+                    strcpy(req.UserID,"047811");
                     //合约
                     strcpy(req.InstrumentID, "zn1701");
                     //价格类型

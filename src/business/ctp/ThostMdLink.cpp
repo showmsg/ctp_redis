@@ -178,7 +178,11 @@ void CThostMdLink::OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, 
 }
 void CThostMdLink::StartWork()
 {
-    m_pUserApi = CThostFtdcMdApi::CreateFtdcMdApi(_flowpath.c_str());
+	char stemp[1024];
+	memset(stemp, 0, sizeof(stemp));
+	sprintf(stemp, "%s%s", _flowpath.c_str(), _userID.c_str());
+	
+    m_pUserApi = CThostFtdcMdApi::CreateFtdcMdApi(stemp);
     m_pUserApi->RegisterSpi(this);
     m_pUserApi->RegisterFront(Lib::stoc(_address));
     m_pUserApi->Init();	

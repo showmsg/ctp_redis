@@ -220,7 +220,7 @@ void CApp::Run()
             }
             if(count == 0)
             {
-				usleep(10000);
+//				usleep(10000);
                 continue;
             }
 			
