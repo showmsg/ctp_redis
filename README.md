@@ -53,6 +53,8 @@ export CPLUS_INCLUDE_PATH
 * 唯一标识用于标识进程所在主机位置；
 * 使用lrange使性能达到报单240000笔/秒；
 * 支持配置多账号交易;
+* 提供API报单接入和socket.io行情接入，是否统一为socket.io接入呢?(因本人刚接触python对某些不是很了解，还请大家帮忙)
+
 ### TODO
 
 * json和struct序列化互转实现;

@@ -2,6 +2,7 @@
 *.o
 *.obj
 *.swap
+*.pyc
 thirdpart/
 src/base/time/
 output
@@ -13,4 +14,4 @@ zookeeper
 tmp/
 doc/*.doc
 doc/*.vsdx
-front
+×ÊÁÏ

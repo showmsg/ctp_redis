@@ -1,0 +1,8 @@
+#coding: utf-8
+
+REDIS_HOST = '192.168.92.5'
+REDIS_PORT = 6379
+REDIS_PWD  = '123456'
+REDIS_DB   = 1
+
+

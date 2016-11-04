@@ -124,10 +124,13 @@ void CThostMdLink::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMa
 		
  //       LOG_INFO("#Market# %s%s_%s\n%s", _channel.c_str(), _env.c_str(), instrument.c_str(), jsonStr.c_str());
        
-//		LOG_INFO("%s%s_%s", _channel.c_str(), _env.c_str(), instrument.c_str());
+
 		string key = _channel;
-		key       += UNDERSCORE_FLAG;
+		/*
+		key       += COLON_FLAG;
 		key       += instrument;
+		*/
+//		LOG_INFO("%s %s %s", _channel.c_str(), _env.c_str(), instrument.c_str());
 		RedisDBIdx dbi(_xredis);
 		bool bRet = dbi.CreateDBIndex(key.c_str(), APHash, CACHE_TYPE_1);
 		if(bRet)
