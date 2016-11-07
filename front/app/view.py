@@ -14,7 +14,7 @@ init_db()
 async_mode = None
 app = Flask(__name__)
 app.config.from_object('config')
-app.config['SECRET_KEY'] = 'secret!'
+app.config['SECRET_KEY'] = 'you just a pig'
 socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 
@@ -101,16 +101,16 @@ class MyNamespace(Namespace):
         session['receive_count'] = session.get('receive_count', 0) + 1
 
         pipline = redis_store.pubsub()
-        pipline.subscribe(['01:channel'])
+        pipline.subscribe(['01:channel:zn1702'])
         for item in pipline.listen():
             emit('my_response',
                     {'data': item['data'], 'count': session['receive_count']})
-            # def on_leave(self, message):
-        # leave_room(message['room'])
-        # session['receive_count'] = session.get('receive_count', 0) + 1
-        # emit('my_response',
-             # {'data': 'In rooms: ' + ', '.join(rooms()),
-              # 'count': session['receive_count']})
+    def on_leave(self, message):
+         leave_room(message['room'])
+         session['receive_count'] = session.get('receive_count', 0) + 1
+         emit('my_response',
+              {'data': 'In rooms: ' + ', '.join(rooms()),
+               'count': session['receive_count']})
     def on_connect(self):
         global thread
         if thread is None:

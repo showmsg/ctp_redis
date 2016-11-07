@@ -126,10 +126,10 @@ void CThostMdLink::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMa
        
 
 		string key = _channel;
-		/*
+		
 		key       += COLON_FLAG;
 		key       += instrument;
-		*/
+		
 //		LOG_INFO("%s %s %s", _channel.c_str(), _env.c_str(), instrument.c_str());
 		RedisDBIdx dbi(_xredis);
 		bool bRet = dbi.CreateDBIndex(key.c_str(), APHash, CACHE_TYPE_1);

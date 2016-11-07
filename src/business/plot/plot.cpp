@@ -205,9 +205,17 @@ void CApp::Run()
 			
 			///循环处理报入策略,根据行情和成交返回等情况触发报单,Redis连接,交易连接,报单
 			//=================================================================
-			for(int i = 0; i < 10000; i++)
+			Json::Reader reader;
+			Json::Value root;
+			for(int i = 0; i < vVal.size(); i++)
 			{
-				vVal.push_back("test");
+				if(reader.parse(vVal[i].c_str(), root))
+				{
+					if(root['group'].compare("当前启动组"))
+					{
+						
+					}
+				}
 			}
 			
 			//模拟往交易发送
