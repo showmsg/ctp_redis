@@ -230,8 +230,8 @@ void CApp::Run()
                 ReplyData::iterator iter = Reply.begin();
                 for (; iter != Reply.end(); iter++) 
                 {
-					CQspFtdcInputOrderField req;
-                    memset(&req, 0, sizeof(CQspFtdcInputOrderField));
+					CInputOrderField req;
+                    memset(&req, 0, sizeof(CInputOrderField));
                     //交易所代码
                     strcpy(req.ExchangeID,"SHFE");
                     //会员号

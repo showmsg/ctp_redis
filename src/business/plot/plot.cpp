@@ -4,6 +4,7 @@
 #include "Inifile.h"
 #include "Logger.h"
 #include "Lib.h"
+#include "json/json.h"
 
 using namespace inifile;
 

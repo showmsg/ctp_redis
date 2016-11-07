@@ -74,16 +74,16 @@ public:
     char *GetLocalID();
 	void SetRedis(TdRedis* redis);
     	///报单
-	bool ReqOrderInsert(int nRequestID,CQspFtdcInputOrderField &Order);
+	bool ReqOrderInsert(int nRequestID,CInputOrderField &Order);
 	///撤单
-	bool ReqOrderAction(int nRequestID,CQspFtdcOrderActionField &OrderAction);
-	bool ReqLogin(int nRequestID,CQspFtdcReqUserLoginField &ReqLoginField);
+	bool ReqOrderAction(int nRequestID,COrderActionField &OrderAction);
+	bool ReqLogin(int nRequestID,CReqUserLoginField &ReqLoginField);
 	
 protected:
 	void Login();
 
 private:
-	void TransReqOrderInsert(CQspFtdcInputOrderField &Order, CThostFtdcInputOrderField &CThostOrder);
+	void TransReqOrderInsert(CInputOrderField &Order, CThostFtdcInputOrderField &CThostOrder);
 private:
     void ReqContract();
 	void ReqClientPosi();

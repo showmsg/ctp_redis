@@ -36,7 +36,7 @@ void CThostTradeLink::OnFrontDisconnected(int nReason)
     printf("%s \n",sTemp);
 
 }
-bool CThostTradeLink::ReqLogin(int nRequestID, CQspFtdcReqUserLoginField &ReqLoginField)
+bool CThostTradeLink::ReqLogin(int nRequestID, CReqUserLoginField &ReqLoginField)
 {
     _brokerID = ReqLoginField.BrokerID;
     _userID   = ReqLoginField.UserID;
@@ -488,7 +488,7 @@ void CThostTradeLink::StartWork()
 
 }
 
-void CThostTradeLink::TransReqOrderInsert(CQspFtdcInputOrderField &Order, CThostFtdcInputOrderField &CThostOrder)
+void CThostTradeLink::TransReqOrderInsert(CInputOrderField &Order, CThostFtdcInputOrderField &CThostOrder)
 {
 
     //交易所代码
@@ -544,7 +544,7 @@ void CThostTradeLink::TransReqOrderInsert(CQspFtdcInputOrderField &Order, CThost
 
 }
 
-bool CThostTradeLink::ReqOrderInsert(int nRequestID,CQspFtdcInputOrderField &Order)
+bool CThostTradeLink::ReqOrderInsert(int nRequestID,CInputOrderField &Order)
 {
     bool successful=true ;
     CThostFtdcInputOrderField oFld;
@@ -560,7 +560,7 @@ bool CThostTradeLink::ReqOrderInsert(int nRequestID,CQspFtdcInputOrderField &Ord
 }
 
 
-bool CThostTradeLink::ReqOrderAction(int nRequestID,CQspFtdcOrderActionField &OrderAction)
+bool CThostTradeLink::ReqOrderAction(int nRequestID,COrderActionField &OrderAction)
 {
     bool successful=true ;
     CThostFtdcInputOrderActionField oFld;

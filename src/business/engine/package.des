@@ -9,8 +9,8 @@
 		
 	</cppfile>
 	<headfile>
-		<file name="QspFtdcUserApiStruct.h"/>
-		<file name="QspFtdcUserApiDataType.h"/>
+		<file name="UserApiStruct.h"/>
+		<file name="UserApiDataType.h"/>
 		<file name="BaseExchApi.h"/>		
 	</headfile>	
 	<command/>

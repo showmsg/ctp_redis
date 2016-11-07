@@ -2,8 +2,8 @@
 #define BaseExchApi_H
 #include "xRedisClient.h"
 #include "global.h"
-#include "QspFtdcUserApiDataType.h"
-#include "QspFtdcUserApiStruct.h"
+#include "UserApiDataType.h"
+#include "UserApiStruct.h"
 #include "json/json.h"
 
 //缓存下，减少行情频繁订阅带来的问题
@@ -69,9 +69,9 @@ class CBaseExchApi
 
         };
 
-        virtual bool ReqOrderInsert(int nRequestID, CQspFtdcInputOrderField &Order){ return true;};
-        virtual bool ReqOrderAction(int nRequestID, CQspFtdcOrderActionField &OrderAction){return true;};
-        virtual bool ReqLogin(int nRequestID, CQspFtdcReqUserLoginField &ReqLoginField){return true;};
+        virtual bool ReqOrderInsert(int nRequestID, CInputOrderField &Order){ return true;};
+        virtual bool ReqOrderAction(int nRequestID, COrderActionField &OrderAction){return true;};
+        virtual bool ReqLogin(int nRequestID, CReqUserLoginField &ReqLoginField){return true;};
         virtual int SubMarketData(char *ppInstrumentID[], int nCount){return 0;};	
 
         virtual int UnSubMarketData(char *ppInstrumentID[], int nCount){return 0;};	
