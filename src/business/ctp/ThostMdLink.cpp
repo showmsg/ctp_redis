@@ -107,30 +107,26 @@ void CThostMdLink::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMa
 
         string instrument = string(pDepthMarketData->InstrumentID);
         Lib::replace(instrument, " ", "#");
-        tick["instrument"] = instrument;
-        tick["price"] = pDepthMarketData->LastPrice;
-        tick["vol"] = pDepthMarketData->Volume;
-        //		tick['TradingDay'] = pDepthMarketData->TradingDay;
-        tick["time"] = string(pDepthMarketData->UpdateTime);
-        tick["msec"] = pDepthMarketData->UpdateMillisec;
-        tick["bid1"] = pDepthMarketData->BidPrice1;
-        tick["bidvol1"] = pDepthMarketData->BidVolume1;
-        tick["ask1"] = pDepthMarketData->AskPrice1;
-        tick["askvol1"] = pDepthMarketData->AskVolume1;
+        tick["instrument"]      = instrument;
+        tick["price"]           = pDepthMarketData->LastPrice;
+        tick["vol"]             = pDepthMarketData->Volume;
+       	tick["TradingDay"]      = pDepthMarketData->TradingDay;
+        tick["time"]            = string(pDepthMarketData->UpdateTime);
+        tick["msec"]            = pDepthMarketData->UpdateMillisec;
+        tick["bid1"]            = pDepthMarketData->BidPrice1;
+        tick["bidvol1"]         = pDepthMarketData->BidVolume1;
+        tick["ask1"]            = pDepthMarketData->AskPrice1;
+        tick["askvol1"]         = pDepthMarketData->AskVolume1;
 
         std::string jsonStr = writer.write(tick);
         Lib::trimright(jsonStr, '\n');
         Lib::trimright(jsonStr, '\r');
 		
- //       LOG_INFO("#Market# %s%s_%s\n%s", _channel.c_str(), _env.c_str(), instrument.c_str(), jsonStr.c_str());
-       
-
-		string key = _channel;
+        string key = _channel;
 		
 		key       += COLON_FLAG;
 		key       += instrument;
 		
-//		LOG_INFO("%s %s %s", _channel.c_str(), _env.c_str(), instrument.c_str());
 		RedisDBIdx dbi(_xredis);
 		bool bRet = dbi.CreateDBIndex(key.c_str(), APHash, CACHE_TYPE_1);
 		if(bRet)

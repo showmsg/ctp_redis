@@ -204,8 +204,7 @@ void CApp::Run()
             {   
                 ReplyData::iterator iter = Reply.begin();
                 for (; iter != Reply.end(); iter++) 
-                {	
-//					LOG_INFO("%s", (*iter).str.c_str());
+                {
 					if(reader.parse((*iter).str, clientMsgQueue))
 					{
 						if(clientMsgQueue["group"].compare("当前启动组"))

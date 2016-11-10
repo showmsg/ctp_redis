@@ -220,8 +220,7 @@ void CApp::ReqOrder(Json::Value root)
 	req.LimitPrice = root["limitprice"].asDouble();
 	//数量
 	req.Volume = root["volume"].asInt();
-	//本地报单号
-	sprintf(req.UserOrderLocalID, "%010lld", m_iReqNo);
+	
 	//			strcpy(req.UserOrderLocalID, "00000000001");
 	//有效期类型
 	req.TimeCondition = root["timecondition"].asInt();
@@ -233,6 +232,8 @@ void CApp::ReqOrder(Json::Value root)
 	m_pExchApi = m_LinkManager->GetTrade(req.UserID, true);
 	if(NULL != m_pExchApi)
 	{
+		//本地报单号
+		strcpy(req.UserOrderLocalID, m_pExchApi->GetLocalID());
 		LOG_INFO("报单 UserID:%s, OrderLocalID:%s", req.UserID, req.UserOrderLocalID);
 		if(!m_pExchApi->ReqOrderInsert(m_iReqNo, req))
 		{
@@ -267,8 +268,7 @@ void CApp::ReqCancel(Json::Value root)
 	strcpy(req.InvestorID, root["investorid"].asString().c_str());
 	//交易用户
 	strcpy(req.UserID, root["userid"].asString().c_str());
-	//本次撤单操作的本地编号
-	sprintf(req.UserOrderActionLocalID, "%010lld", m_iReqNo);
+	
 	//被撤订单的本地报单编号
 	strcpy(req.UserOrderLocalID, root["orderlocalid"].asString().c_str());	
 	//报单操作标志
@@ -281,6 +281,8 @@ void CApp::ReqCancel(Json::Value root)
 	m_pExchApi = m_LinkManager->GetTrade(req.UserID, true);
 	if(NULL != m_pExchApi)
 	{
+		//本次撤单操作的本地编号
+		strcpy(req.UserOrderActionLocalID, m_pExchApi->GetLocalID());
 		LOG_INFO("报单 UserID:%s, OrderLocalID:%s, OrderSysID:%s", req.UserID, req.UserOrderLocalID, req.OrderSysID);
 		if(!m_pExchApi->ReqOrderAction(m_iReqNo, req))
 		{

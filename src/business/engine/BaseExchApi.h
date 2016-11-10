@@ -99,7 +99,8 @@ class CBaseExchApi
         string _address;
         string _flowpath;
 		int _topic;
-
+		string _marketgroup;
+		
         int    m_iReqSeqNo;
         int  m_iMaxLocalNo;
         char m_sMaxLocalNo[50];	

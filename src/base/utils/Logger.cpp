@@ -28,6 +28,8 @@
 pid_t gettid() {  return syscall(SYS_gettid); }
 #endif
 
+#include "printfc.h"
+
 #define DEFAULT_LOG_SIZE        (10*1024*1024)//10M
 #define DEFAULT_MAX_LOG_SPACE   (500*1024*1024)//500M
 #define MAX_PATH                512
@@ -186,12 +188,21 @@ int CLog::writeline(uint level, const char* format_str, ...)
     }
 
     int write_len = fprintf(m_fp, "[%s-%d][%s]", get_time_str(true), get_thread_id(), s_level_str[level-1]);
-
+	
+	char buf[1024]={0};
+	
     va_list p_list;
     va_start(p_list, format_str);
-    write_len += vfprintf(m_fp, format_str, p_list);
+	vsprintf(buf, format_str, p_list);    
     va_end(p_list);
+	
+	write_len += fprintf(m_fp, "%s", buf);
+	if(level == LOG_LEVEL_INFO)
+	{		
+		printfc(FG_GREEN, "%s\n", buf);
+	}
     write_len += fprintf(m_fp, "\n");
+	
     fflush(m_fp);
     m_lock.unlock();
 

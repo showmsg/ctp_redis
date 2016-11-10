@@ -4,6 +4,7 @@
 	<package name="ini" dir="../../src/base/ini"/>
 	<package name="json" dir="../../src/base/json"/>
 	<package name="redis" dir="../../src/base/redis"/>
+	<package name="printfc" dir="../../src/base/printfc"/>
 	<package name="thread" dir="../../src/base/thread"/>
 	<package name="baseexchapi" dir="../../src/business/engine"/>
 	<package name="plot" dir="../../src/business/plot"/>

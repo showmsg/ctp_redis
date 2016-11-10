@@ -8,6 +8,7 @@
 #include "Redis.h"
 
 typedef map<string,int> UserRspSerializeMap;
+typedef map<string,int> QryInstrumentMap;
 class CThostTradeLink : public CThostFtdcTraderSpi, public CBaseExchApi
 {
     public:
@@ -101,7 +102,7 @@ private:
 	UserRspSerializeMap m_rspinserMap;
 	UserRspSerializeMap m_rspactionMap;
 	UserRspSerializeMap m_rtnorderMap;
-	UserRspSerializeMap m_rtntradeMap;
+	UserRspSerializeMap m_rtntradeMap;	
 };
 
 #endif
