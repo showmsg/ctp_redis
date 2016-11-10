@@ -76,7 +76,7 @@ public:
     	///报单
 	bool ReqOrderInsert(int nRequestID,CInputOrderField &Order);
 	///撤单
-	bool ReqOrderAction(int nRequestID,COrderActionField &OrderAction);
+	bool ReqOrderAction(int nRequestID, COrderActionField &OrderAction);
 	bool ReqLogin(int nRequestID,CReqUserLoginField &ReqLoginField);
 	
 protected:

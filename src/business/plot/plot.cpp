@@ -5,6 +5,7 @@
 #include "Logger.h"
 #include "Lib.h"
 #include "json/json.h"
+#include "UserApiDataType.h"
 
 using namespace inifile;
 
@@ -140,16 +141,16 @@ void CApp::Init(string group, string appkey)
     m_rtntrade += "m001";
 
     m_routerMsg  = _env + _routermsg;
-    m_routerMsg += COLON_FLAG;
     m_routerMsg += m_group;
-
+	
+	printf("Router:[%s]\n", m_routerMsg.c_str());
     m_clientReq = _env + _clientreq;
 	
-	LOG_INFO("#PLOT# %s, SendQueue:%s", m_routerMsg.c_str(), m_clientReq.c_str());
-    LOG_INFO("#Channel# channel:%s, userstatus:%s, client_queue:%s", _channel.c_str(), _userstatus.c_str(), _clientreq.c_str());
-    LOG_INFO("rspaction:%s, rspinsert:%s, clientposition:%s, instrument:%s", _rspaction.c_str(), _rspinsert.c_str(), 
+	LOG_INFO("#PLOT# [%s], SendQueue:[%s]", m_routerMsg.c_str(), m_clientReq.c_str());
+    LOG_INFO("#Channel# channel:[%s], userstatus:[%s], client_queue:[%s]", _channel.c_str(), _userstatus.c_str(), _clientreq.c_str());
+    LOG_INFO("rspaction:[%s], rspinsert:[%s], clientposition:[%s], instrument:[%s]", _rspaction.c_str(), _rspinsert.c_str(), 
             _clientposition.c_str(), _instruments.c_str());
-    LOG_INFO("rtnorder:%s, rtntrade:%s", _rtnorder.c_str(), _rtntrade.c_str());
+    LOG_INFO("rtnorder:[%s], rtntrade:[%s]", _rtnorder.c_str(), _rtntrade.c_str());
     
     m_plotRedis.xredis             = &_xredis; 
     m_plotRedis.Env		           = _env;	
@@ -178,6 +179,7 @@ void CApp::Run()
 	// {group:a,msgtype:plota,id:1,brokerid:9999,userid:m001,
 	//  invesotorid:a,exchangeid:shfe,instrumentid:zn1701,pricetype:0,
 	// limitprice:1000.0,direction:buy}
+	LOG_INFO("m_routerMsg:[%s]", m_routerMsg.c_str());
     bool bRet = dbi.CreateDBIndex(m_routerMsg.c_str(), APHash, CACHE_TYPE_1);
     while(true)
     {	
@@ -187,38 +189,65 @@ void CApp::Run()
             if (!_xredis.llen(dbi, m_routerMsg.c_str(), count)) {
                 LOG_ERROR("%s error %s", __PRETTY_FUNCTION__, dbi.GetErrInfo());
             }
+
 			if(count == 0)
 			{
 				continue;
 			}
-			VALUES vVal;
+			
 			count = count > 1000?1000:count;
+			
+			Json::Reader reader;
+			Json::Value clientMsgQueue;
             ///取到客户请求报单数量
             if (_xredis.lrange(dbi, m_routerMsg.c_str(), 0, count, Reply)) 
             {   
                 ReplyData::iterator iter = Reply.begin();
                 for (; iter != Reply.end(); iter++) 
-                {
-					vVal.push_back((*iter).str);
-//                    LOG_INFO("%d\t%s", (*iter).type, (*iter).str.c_str());
+                {	
+//					LOG_INFO("%s", (*iter).str.c_str());
+					if(reader.parse((*iter).str, clientMsgQueue))
+					{
+						if(clientMsgQueue["group"].compare("当前启动组"))
+						{
+							//促发策略
+						}
+					}
                 }
             }
 			
 			///循环处理报入策略,根据行情和成交返回等情况触发报单,Redis连接,交易连接,报单
 			//=================================================================
-			Json::Reader reader;
-			Json::Value root;
-			for(int i = 0; i < vVal.size(); i++)
+			VALUES vVal;
+
+			for(int i = 0; i < count; i++)
 			{
-				if(reader.parse(vVal[i].c_str(), root))
-				{
-					if(root['group'].compare("当前启动组"))
-					{
-						
-					}
-				}
+				Json::Value order;
+				Json::FastWriter writer;
+
+				order["itype"]                     = "order";
+				order["exchangeid"]                = "SHFE";
+				order["brokerid"]                  = "9999";
+				order["investorid"]                = "047811";
+				order["userid"]                    = "047811";
+				order["instrumentid"]              = "zn1701";
+				order["pricetype"]                 = OPT_LimitPrice;
+				order["direction"]                 = D_Buy;
+				order["offsetflag"]                = OF_Open;
+				order["hedgeflag"]                 = CHF_Speculation;
+				order["limitprice"]                = 14.40;
+				order["volume"]                    = 1;
+				order["timecondition"]             = TC_GFD;
+				order["gtddate"]                   = "20161108";
+				order["volumecondition"]           = VC_AV;
+				order["closereason"]                = FCR_NotForceClose;
+
+				string jsonstr = writer.write(order);
+				vVal.push_back(jsonstr);
+				LOG_INFO("%s %s", m_clientReq.c_str(), jsonstr.c_str());
 			}
 			
+//			LOG_INFO("模拟策略发单发单%s", m_clientReq.c_str());
 			//模拟往交易发送
 			bRet = dbi.CreateDBIndex(m_clientReq.c_str(), APHash, CACHE_TYPE_1);
 			if(bRet)

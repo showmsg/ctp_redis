@@ -17,13 +17,16 @@ class CApp : public Thread
         virtual ~CApp(void);
         void Init();
         void Run();
+	private:
+		void ReqOrder(Json::Value value);
+		void ReqCancel(Json::Value value);
     private:
         CBaseExchApi* m_pExchApi;
         xRedisClient _xredis;
 		xRedisClient m_mainxredis;
         IniFile g_ini;
         string clientReq;
-        int m_iReqNo;
+        unsigned long long m_iReqNo;
         TdRedis tdredis;
 		CGateLinkManager* m_LinkManager;
 		LinkManager    m_linkVect;
@@ -118,21 +121,7 @@ void CApp::Init()
 		#endif
 		goto LOOP_CONNECT_REDIS;
 	}   
-	/*
-	m_mainxredis.Init(iredis_cnt);	
 	
-	LOOP_CONNECT_MAIN:
-    if(!m_mainxredis.ConnectRedisCache(RedisList, iredis_cnt, CACHE_TYPE_2))
-	{
-		LOG_ERROR("connect redis error");
-		#ifdef WIN32
-		 Sleep(1000);
-		#else
-				 usleep(100);
-		#endif
-		goto LOOP_CONNECT_MAIN;
-	}
-	*/
 	//=====================================================================
 	string _tick           = g_ini.getStringValue(TRADE_SECTION, "channel_tick", iRet);
     string _channel        = g_ini.getStringValue(TRADE_SECTION, "channel_market", iRet);
@@ -204,6 +193,108 @@ void CApp::Init()
     LOG_INFO("===============================================================\n");
 }
 
+void CApp::ReqOrder(Json::Value root)
+{
+	CInputOrderField req;
+	memset(&req, 0, sizeof(CInputOrderField));
+	
+	//交易所代码
+	strcpy(req.ExchangeID, root["exchangeid"].asString().c_str());
+	//会员号
+	strcpy(req.BrokerID, root["brokerid"].asString().c_str());
+	//客户号
+	strcpy(req.InvestorID, root["investorid"].asString().c_str());
+	//交易用户
+	strcpy(req.UserID, root["userid"].asString().c_str());
+	//合约
+	strcpy(req.InstrumentID, root["instrumentid"].asString().c_str());
+	//价格类型
+	req.OrderPriceType = root["pricetype"].asInt();
+	//买卖方向
+	req.Direction = root["direction"].asInt();
+	//开平标志
+	req.OffsetFlag = root["offsetflag"].asInt();
+	//投机套保标志			
+	req.HedgeFlag = root["hedgeflag"].asInt();
+	//价格
+	req.LimitPrice = root["limitprice"].asDouble();
+	//数量
+	req.Volume = root["volume"].asInt();
+	//本地报单号
+	sprintf(req.UserOrderLocalID, "%010lld", m_iReqNo);
+	//			strcpy(req.UserOrderLocalID, "00000000001");
+	//有效期类型
+	req.TimeCondition = root["timecondition"].asInt();
+	strcpy(req.GTDDate, root["gtddate"].asString().c_str());
+	// 成交量类型
+	req.VolumeCondition = root["volumecondition"].asInt();
+	req.ForceCloseReason = root["closereason"].asInt();
+
+	m_pExchApi = m_LinkManager->GetTrade(req.UserID, true);
+	if(NULL != m_pExchApi)
+	{
+		LOG_INFO("报单 UserID:%s, OrderLocalID:%s", req.UserID, req.UserOrderLocalID);
+		if(!m_pExchApi->ReqOrderInsert(m_iReqNo, req))
+		{
+			LOG_ERROR("报单失败了 %s %s", req.UserID, req.UserOrderLocalID);
+		}
+		
+	}
+	else
+	{
+		LOG_ERROR("客户未登录 %s %s", req.UserID, req.UserOrderLocalID);
+	}
+	m_iReqNo++;
+}
+/**
+*  接收报单数据json
+*  { "itype":"cancel",
+*    
+*	}
+*/
+void CApp::ReqCancel(Json::Value root)
+{
+	COrderActionField req;
+	memset(&req, 0, sizeof(COrderActionField));
+	
+	//交易所代码
+	strcpy(req.ExchangeID, root["exchangeid"].asString().c_str());
+	//报单编号
+	strcpy(req.OrderSysID, root["ordersysid"].asString().c_str());
+	//会员号
+	strcpy(req.BrokerID, root["brokerid"].asString().c_str());
+	//客户号
+	strcpy(req.InvestorID, root["investorid"].asString().c_str());
+	//交易用户
+	strcpy(req.UserID, root["userid"].asString().c_str());
+	//本次撤单操作的本地编号
+	sprintf(req.UserOrderActionLocalID, "%010lld", m_iReqNo);
+	//被撤订单的本地报单编号
+	strcpy(req.UserOrderLocalID, root["orderlocalid"].asString().c_str());	
+	//报单操作标志
+	req.ActionFlag = root["actionflag"].asInt();	
+	//价格
+	req.LimitPrice = root["limitprice"].asDouble();	
+	//数量
+	req.VolumeChange = root["volumechange"].asInt();	
+
+	m_pExchApi = m_LinkManager->GetTrade(req.UserID, true);
+	if(NULL != m_pExchApi)
+	{
+		LOG_INFO("报单 UserID:%s, OrderLocalID:%s, OrderSysID:%s", req.UserID, req.UserOrderLocalID, req.OrderSysID);
+		if(!m_pExchApi->ReqOrderAction(m_iReqNo, req))
+		{
+			LOG_ERROR("报单失败了 %s %s", req.UserID, req.UserOrderLocalID);
+		}
+		
+	}
+	else
+	{
+		LOG_ERROR("客户未登录 %s %s", req.UserID, req.UserOrderLocalID);
+	}
+	m_iReqNo++;
+}
+
 void CApp::Run()
 {
 	//如果交易登录且查询基础信息完毕，可以进行报单
@@ -212,6 +303,7 @@ void CApp::Run()
     RedisDBIdx dbi(&_xredis);
     VALUES vVal;    
     bool bRet = dbi.CreateDBIndex(szHKey, APHash, CACHE_TYPE_1);
+	LOG_INFO("ClientReq[%s]", szHKey);
     while(true)
     {	
         if (bRet) {
@@ -220,9 +312,9 @@ void CApp::Run()
             if (!_xredis.llen(dbi, szHKey, count)) {
                 LOG_ERROR("[%s] %s error %s", clientReq.c_str(), __PRETTY_FUNCTION__, dbi.GetErrInfo());
             }
+
             if(count == 0)
             {
-//				usleep(1000);
                 continue;
             }
             if (_xredis.lrange(dbi, szHKey, 0, count, Reply)) 
@@ -230,46 +322,38 @@ void CApp::Run()
                 ReplyData::iterator iter = Reply.begin();
                 for (; iter != Reply.end(); iter++) 
                 {
-					CInputOrderField req;
-                    memset(&req, 0, sizeof(CInputOrderField));
-                    //交易所代码
-                    strcpy(req.ExchangeID,"SHFE");
-                    //会员号
-                    strcpy(req.BrokerID, "9999");
-                    //客户号
-                    strcpy(req.InvestorID,"047811");
-                    //交易用户
-                    strcpy(req.UserID,"047811");
-                    //合约
-                    strcpy(req.InstrumentID, "zn1701");
-                    //价格类型
-                    req.OrderPriceType = '1';
-                    //买卖方向
-                    req.Direction = '0';
-                    //开平标志
-                    req.OffsetFlag='0';
-                    //投机套保标志			
-                    req.HedgeFlag = '1';
-                    //价格
-                    req.LimitPrice = 0.0;
-                    //数量
-                    req.Volume = 1;
-                    //本地报单号
-                    sprintf(req.UserOrderLocalID, "%010d", m_iReqNo++);
-                    //			strcpy(req.UserOrderLocalID, "00000000001");
-                    //有效期类型
-                    req.TimeCondition = '1';
-                    strcpy(req.GTDDate, "20160903");
-                    // 成交量类型
-                    req.VolumeCondition = '1';
-                    req.ForceCloseReason = '0';
+					Json::Reader reader;
+					Json::Value root;
 
-                    LOG_INFO("#client_queue_msg# %s %s", clientReq.c_str(), (*iter).str.c_str());
-					m_pExchApi = m_LinkManager->GetTrade(req.UserID, true);
-                    if(NULL != m_pExchApi && !m_pExchApi->ReqOrderInsert(0, req))
-                    {
-                        LOG_ERROR("报单失败了 %s %s", req.UserID, req.UserOrderLocalID);
-                    }
+					if(reader.parse((*iter).str, root))
+					{
+
+						//内部报单类型
+						if(!root.isMember("itype"))
+						{
+							LOG_ERROR("内部报单类型字段不存在");
+							continue;
+						}
+						string itype = root["itype"].asString();
+
+						//报单类型
+						if(!itype.compare("order"))
+						{
+							ReqOrder(root);
+						}
+						else if(!itype.compare("cancel"))
+						{
+							ReqCancel(root);
+						}
+						else
+						{
+							LOG_ERROR("不支持的报单类型[%s] %s", itype.c_str(), (*iter).str.c_str());
+						}
+					}
+					else
+					{
+						LOG_ERROR("非内部报单数据%s", (*iter).str.c_str());
+					}
                 }
             }
             if(!_xredis.ltrim(dbi, szHKey, count, -1))
