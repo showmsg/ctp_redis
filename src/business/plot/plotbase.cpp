@@ -10,3 +10,7 @@ CPlotBase::~CPlotBase()
 {
 	
 }
+bool CPlotBase::SendOrder(Json::Value root)
+{
+	return true;
+}

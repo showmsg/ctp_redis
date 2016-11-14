@@ -28,6 +28,7 @@ class CPlotBase
     public:
         CPlotBase();
         virtual ~CPlotBase();
+		bool SendOrder(Json::Value root);
     protected:
 
 };

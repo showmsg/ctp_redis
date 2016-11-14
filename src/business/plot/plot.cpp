@@ -234,7 +234,7 @@ void CApp::Run()
 				order["direction"]                 = D_Buy;
 				order["offsetflag"]                = OF_Open;
 				order["hedgeflag"]                 = CHF_Speculation;
-				order["limitprice"]                = 14.40;
+				order["limitprice"]                = 20950.00;
 				order["volume"]                    = 1;
 				order["timecondition"]             = TC_GFD;
 				order["gtddate"]                   = "20161108";
