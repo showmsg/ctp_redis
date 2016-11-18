@@ -127,19 +127,15 @@ void CApp::Init()
     string _channel        = g_ini.getStringValue(TRADE_SECTION, "channel_market", iRet);
     string _userstatus     = g_ini.getStringValue(TRADE_SECTION, "channel_user_status", iRet);
 
-    string _rspaction      = g_ini.getStringValue(TRADE_SECTION, "channel_trade_rspaction", iRet);
-    string _rspinsert      = g_ini.getStringValue(TRADE_SECTION, "channel_trade_rspinsert", iRet);
-    string _rtnorder       = g_ini.getStringValue(TRADE_SECTION, "channel_trade_rtnorder", iRet);
-    string _rtntrade       = g_ini.getStringValue(TRADE_SECTION, "channel_trade_rtntrade", iRet);
+    string _response       = g_ini.getStringValue(TRADE_SECTION, "channel_trade_response", iRet);   
     string _clientposition = g_ini.getStringValue(TRADE_SECTION, "channel_user_clientposition", iRet);
     string _instruments    = g_ini.getStringValue(TRADE_SECTION, "channel_instrument", iRet);
     string _clientreq      = g_ini.getStringValue(TRADE_SECTION, "client_msg_queue", iRet);
     string _mrktlist       = g_ini.getStringValue(TRADE_SECTION, "channel_marketlist", iRet);
 	
 	LOG_INFO("#Channel# tick:[[%s], userstatus:[%s], client_queue:[%s]", _tick.c_str(), _userstatus.c_str(), _clientreq.c_str());
-    LOG_INFO("rspaction:[%s], rspinsert:[%s], clientposition:[%s], instrument:[%s]", _rspaction.c_str(), _rspinsert.c_str(), 
-            _clientposition.c_str(), _instruments.c_str());
-    LOG_INFO("rtnorder:[%s], rtntrade:[%s]", _rtnorder.c_str(), _rtntrade.c_str());
+    LOG_INFO("response:[%s], clientposition:[%s], instrument:[%s]", _response.c_str(), _clientposition.c_str(), _instruments.c_str());
+   
 	//======================================================================
 	string _flowpath      = g_ini.getStringValue(TRADE_SECTION, "flow_path", iRet);	
 	LOG_INFO("TradeNums:%d", _tradenums);
@@ -175,10 +171,7 @@ void CApp::Init()
     tdredis.Channel            = _env + _channel;	
     tdredis.Tick               = _env + _tick;
     tdredis.UserStatus         = _env + _userstatus;
-    tdredis.RspOrderInsert     = _env + _rspinsert;
-    tdredis.RspOrderAction     = _env + _rspaction;
-    tdredis.RtnOrder           = _env + _rtnorder;
-    tdredis.RtnTrade           = _env + _rtntrade;
+    tdredis.Response           = _env + _response;    
     tdredis.ClientPosition     = _env + _clientposition;
     tdredis.Instruments        = _env + _instruments;
     tdredis.ClientReq          = _env + _clientreq;
@@ -249,7 +242,7 @@ void CApp::ReqOrder(Json::Value root)
 }
 /**
 *  接收报单数据json
-*  { "itype":"cancel",
+*  { "itype":'A',
 *    
 *	}
 */
@@ -336,21 +329,27 @@ void CApp::Run()
 							LOG_ERROR("内部报单类型字段不存在");
 							continue;
 						}
-						string itype = root["itype"].asString();
-
+						
+						int itype = root["itype"].asInt();
 						//报单类型
-						if(!itype.compare("order"))
+						switch(itype)
 						{
-							ReqOrder(root);
+							case IMSG_TYPE_REQORDER:
+							{
+								ReqOrder(root);
+							}
+							break;
+							case IMSG_TYPE_REQACTION:
+							{
+								ReqCancel(root);
+							}
+							break;
+							default:
+							LOG_ERROR("不支持的报单类型[%c] %s", itype, (*iter).str.c_str());
+							break;
+							
 						}
-						else if(!itype.compare("cancel"))
-						{
-							ReqCancel(root);
-						}
-						else
-						{
-							LOG_ERROR("不支持的报单类型[%s] %s", itype.c_str(), (*iter).str.c_str());
-						}
+						
 					}
 					else
 					{

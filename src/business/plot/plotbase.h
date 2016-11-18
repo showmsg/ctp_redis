@@ -1,7 +1,7 @@
 #ifndef _PLOT_BASE__
 #define _PLOT_BASE__
-#include "Redis.h"
-#include "json/json.h"
+#include "global.h"
+#include "BaseExchApi.h"
 
 typedef struct plotRedis
 {
@@ -11,10 +11,7 @@ typedef struct plotRedis
     string Snapshot;          ///行情快照, set/get
     string Tick;              ///行情分时, lpush/lpop
     string UserStatus;        ///用户状态
-    string RtnOrder;          ///订单回报
-    string RtnTrade;          ///成交回报
-    string RspOrderInsert;    ///订单响应
-    string RspOrderAction;    ///撤单响应
+    string Response;          ///订单回报\成交回报\订单响应\撤单响应    
     string ClientPosition;    ///持仓
     string Account;			  ///资金
     string Instruments;       ///合约
@@ -30,6 +27,14 @@ class CPlotBase
         CPlotBase();
         virtual ~CPlotBase();
 		bool SendOrder(Json::Value root);
+		//订单响应，CTP一般只有出错才会返回响应
+		bool OnRspOrderInsert(Json::Value root);
+		//撤单响应，CTP一般出错才会响应到Rsp
+		bool OnRspOrderAction(Json::Value root);
+		//报撤单响应
+		bool OnRtnOrder(Json::Value root);
+		//成交响应
+		bool OnRtnTrade(Json::Value root);
     protected:
 
 };

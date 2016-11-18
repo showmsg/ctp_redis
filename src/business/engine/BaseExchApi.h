@@ -9,6 +9,15 @@
 //缓存下，减少行情频繁订阅带来的问题
 #define MAX_STORE_INSTRUMENTS      60
 
+#define IMSG_TYPE_MARKET            'M'    ///行情
+#define IMSG_TYPE_REQORDER          'O'    ///报单
+#define IMSG_TYPE_REQACTION         'A'    ///撤单
+#define IMSG_TYPE_RSPORDER          'B'    ///报单响应
+#define IMSG_TYPE_RSPACTION         'C'    ///撤单相应
+#define IMSG_TYPE_RTNORDER          'R'    ///RTNORDER
+#define IMSG_TYPE_RTNTRADE          'T'    ///成交响应
+
+
 typedef struct apiExchLink
 {
     string BrokerID;
@@ -43,10 +52,7 @@ typedef struct tdRedis
     string Tick;                ///分时行情,lpush
     string Snapshot;            ///行情快照, set
     string UserStatus;          ///用户状态
-    string RtnOrder;            ///订单回报
-    string RtnTrade;            ///成交回报
-    string RspOrderInsert;      ///订单响应
-    string RspOrderAction;      ///撤单响应
+    string Response;            ///订单回报\成交回报\订单响应\撤单响应
     string ClientPosition;      ///持仓
     string Instruments;         ///合约
     string ClientReq;           ///客户请求队列

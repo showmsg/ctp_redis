@@ -187,6 +187,7 @@ void CThostTradeLink::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, C
         Json::FastWriter writer;
         Json::Value rspOrderInsert;
         rspOrderInsert["Idx"]                = m_rspinserMap[pInputOrder->UserID];
+		rspOrderInsert["itype"]              = IMSG_TYPE_RSPORDER;
         rspOrderInsert["BrokerID"]           = pInputOrder->BrokerID;
         rspOrderInsert["InvestorID"]         = pInputOrder->InvestorID;
         rspOrderInsert["InstrumentID"]       = pInputOrder->InstrumentID;
@@ -217,14 +218,15 @@ void CThostTradeLink::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, C
         rspOrderInsert["ClientID"]            = pInputOrder->ClientID;
         rspOrderInsert["IPAddress"]           = pInputOrder->IPAddress;
         rspOrderInsert["MacAddress"]          = pInputOrder->MacAddress;
-
+		rspOrderInsert["ErrorMsg"]            = pRspInfo->ErrorMsg;
+		rspOrderInsert["ErrorID"]             = pRspInfo->ErrorID;
         std::string jsonStr = "'";
         jsonStr += writer.write(rspOrderInsert);
         Lib::trimright(jsonStr, '\n');
         Lib::trimright(jsonStr, '\r');
         jsonStr += "'";
 
-        string key = m_redis->RspOrderInsert;
+        string key = m_redis->Response;
         key += UNDERSCORE_FLAG;
         key += pInputOrder->BrokerID;
         key += UNDERSCORE_FLAG;
@@ -261,6 +263,7 @@ void CThostTradeLink::OnRspOrderAction(CThostFtdcOrderActionField *pOrderAction,
         Json::FastWriter writer;
         Json::Value rspOrderAction;
         rspOrderAction["Idx"]                = m_rspactionMap[pOrderAction->UserID];
+		rspOrderAction["itype"]              = IMSG_TYPE_RSPACTION;
         rspOrderAction["BrokerID"]           = pOrderAction->BrokerID;
         rspOrderAction["InvestorID"]         = pOrderAction->InvestorID;
         rspOrderAction["OrderActionRef"]     = pOrderAction->OrderActionRef;
@@ -291,14 +294,15 @@ void CThostTradeLink::OnRspOrderAction(CThostFtdcOrderActionField *pOrderAction,
         rspOrderAction["InvestUnitID"]       = pOrderAction->InvestUnitID;
         rspOrderAction["IPAddress"]          = pOrderAction->IPAddress;
         rspOrderAction["MacAddress"]         = pOrderAction->MacAddress;
-
+		rspOrderAction["ErrorMsg"]            = pRspInfo->ErrorMsg;
+		rspOrderAction["ErrorID"]             = pRspInfo->ErrorID;
         std::string jsonStr = "'";
         jsonStr += writer.write(rspOrderAction);		
         Lib::trimright(jsonStr, '\n');
         Lib::trimright(jsonStr, '\r');
         jsonStr += "'";
 
-        string key = m_redis->RspOrderAction;
+        string key = m_redis->Response;
 
         key += pOrderAction->BrokerID;
         key +=  UNDERSCORE_FLAG;
@@ -335,6 +339,7 @@ void CThostTradeLink::OnRtnOrder(CThostFtdcOrderField *pOrder)
         Json::FastWriter writer;
         Json::Value rspOrderInsert;
         rspOrderInsert["Idx"]                      = m_rtnorderMap[pOrder->UserID];
+		rspOrderInsert["itype"]                    = IMSG_TYPE_RTNORDER;
         rspOrderInsert["BrokerID"]                 = pOrder->BrokerID;
         rspOrderInsert["InvestorID"]               = pOrder->InvestorID;
         rspOrderInsert["InstrumentID"]             = pOrder->InstrumentID;
@@ -379,7 +384,7 @@ void CThostTradeLink::OnRtnOrder(CThostFtdcOrderField *pOrder)
         Lib::trimright(jsonStr, '\r');
         jsonStr += "'";
 
-        std::string key = m_redis->RtnOrder;	
+        std::string key = m_redis->Response;	
 
         key += pOrder->BrokerID;	
         key += UNDERSCORE_FLAG;
@@ -411,6 +416,7 @@ void CThostTradeLink::OnRtnTrade(CThostFtdcTradeField *pTrade)
         Json::FastWriter writer;
         Json::Value rtnTrade;
         rtnTrade["Idx"]                   = m_rtntradeMap[pTrade->UserID];
+		rtnTrade["itype"]                 = IMSG_TYPE_RTNTRADE;
         rtnTrade["BrokerID"]              = pTrade->BrokerID;
         rtnTrade["InvestorID"]            = pTrade->InvestorID;
         rtnTrade["InstrumentID"]          = pTrade->InstrumentID;
@@ -448,7 +454,7 @@ void CThostTradeLink::OnRtnTrade(CThostFtdcTradeField *pTrade)
         Lib::trimright(jsonStr, '\r');
         jsonStr += "'";
 
-        string key = m_redis->RtnTrade;
+        string key = m_redis->Response;
 
         key += string(pTrade->BrokerID);
         key += UNDERSCORE_FLAG;

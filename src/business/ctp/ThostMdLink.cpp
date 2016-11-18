@@ -107,6 +107,7 @@ void CThostMdLink::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMa
 
         string instrument = string(pDepthMarketData->InstrumentID);
         Lib::replace(instrument, " ", "#");
+		tick["itype"]           = IMSG_TYPE_MARKET;
         tick["instrument"]      = instrument;
         tick["price"]           = pDepthMarketData->LastPrice;
         tick["vol"]             = pDepthMarketData->Volume;
