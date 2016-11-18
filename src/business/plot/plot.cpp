@@ -125,20 +125,20 @@ void CApp::Init(string group, string appkey)
     m_rsporder += UNDERSCORE_FLAG;
     m_rsporder += _brokerid;
     m_rsporder += UNDERSCORE_FLAG;
-    m_rsporder += "m001";
+    m_rsporder += _userid;
 
     m_rtnorder  = _env + _rtnorder;
     m_rtnorder += UNDERSCORE_FLAG;
     m_rtnorder += _brokerid;
     m_rtnorder += UNDERSCORE_FLAG;
-    m_rtnorder += "m001";
+    m_rtnorder += _userid;
     LOG_INFO("%s", m_rtnorder.c_str());
 
     m_rtntrade  = _env + _rtntrade;
     m_rtntrade += UNDERSCORE_FLAG;
     m_rtntrade += _brokerid;
     m_rtntrade += UNDERSCORE_FLAG;
-    m_rtntrade += "m001";
+    m_rtntrade += _userid;
 
     m_routerMsg  = _env + _routermsg;
     m_routerMsg += m_group;

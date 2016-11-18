@@ -1,6 +1,7 @@
 #ifndef _PLOT_BASE__
 #define _PLOT_BASE__
 #include "Redis.h"
+#include "json/json.h"
 
 typedef struct plotRedis
 {
