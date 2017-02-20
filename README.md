@@ -6,6 +6,7 @@ ctp_Redis
 
 ### 依赖
 
+redis 3.2.x版本;
 ctp_redis依赖hiredis、xredis在使用xredis前需要安装hiredis库；
 [xredis](https://git.oschina.net/showmsg/xrdis_rosolve) 使用了自己修改过的版本，RedisNode可配置;
 默认安装即可;
