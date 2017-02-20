@@ -16,7 +16,6 @@
 	<headfile>		
 	</headfile>
 	<libfile>
-		<file name="zookeeper_mt"/>		
 	</libfile>
 	<command/>
 </packageDefine>

@@ -312,7 +312,7 @@ bool CApp::DealResponse(RedisDBIdx dbi, char* brokerid, char* userid)
 		}
 		else
 		{
-			LOG_ERROR("parse json data error:%s", rspdata.c_str());
+			//LOG_ERROR("parse json data error:%s", rspdata.c_str());
 		}
 		
 		if(!_xredis.ltrim(dbi, response.c_str(), count, -1))

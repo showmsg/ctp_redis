@@ -14,7 +14,6 @@
 #endif // _MSC_VER > 1000
 
 #include "UserApiDataType.h"
-#include <msgpack.hpp>
 
 ///系统用户登录请求
 struct CReqUserLoginField

@@ -3,6 +3,7 @@
 	<parameter/>
 	<depend>
 		<package name="ini" version="1"/>
+		<package name="printfc" version="1"/>
 	</depend>
 	<cppfile>
 		<file name="Lib.cpp"/>
